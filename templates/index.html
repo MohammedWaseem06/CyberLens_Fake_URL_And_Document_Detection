@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ThreatGuard AI | 2026 Security</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #0d1117;
+            --card-bg: #1c2128;
+            --accent: #58a6ff;
+            --success: #238636;
+            --danger: #da3633;
+            --warning: #d29922;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-dark);
+            color: #c9d1d9;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            width: 100%;
+            background: #161b22;
+            padding: 20px 0;
+            text-align: center;
+            border-bottom: 1px solid #30363d;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar h1 {
+            margin: 0;
+            color: var(--accent);
+            font-size: 24px;
+        }
+
+        .container {
+            margin: 40px 20px;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 700px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+        }
+
+        section { margin-bottom: 40px; }
+        h2 { border-bottom: 1px solid #30363d; padding-bottom: 10px; color: white; }
+
+        input[type="text"], input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border: 1px solid #30363d;
+            background: #0d1117;
+            color: white;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: var(--success);
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            transition: opacity 0.2s;
+        }
+
+        button:hover { opacity: 0.9; }
+
+        .result-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 5px solid var(--accent);
+            background: #21262d;
+        }
+
+        /* Dynamic Classes for URL detection */
+        .benign { border-color: #34d399; color: #34d399; }
+        .phishing { border-color: #f87171; color: #f87171; }
+        .malware { border-color: #ef4444; color: #ef4444; }
+        .defacement { border-color: #fbbf24; color: #fbbf24; }
+
+        .spinner {
+            display: none;
+            width: 25px;
+            height: 25px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin: 10px auto;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <h1><i class="fas fa-shield-halved"></i>CyberLens</h1>
+    </div>
+
+    <div class="container">
+        <section>
+            <h2><i class="fas fa-file-shield"></i> Content Analysis</h2>
+            <form action="/scam/" method="post" enctype="multipart/form-data" id="fileForm">
+                <input type="file" name="file" accept=".pdf,.txt" required>
+                <button type="submit" onclick="showLoading('fileSpinner')">
+                    Analyze Document
+                </button>
+                <div id="fileSpinner" class="spinner"></div>
+            </form>
+
+            {% if message %}
+            <div class="result-box">
+                <strong>Analysis Result:</strong>
+                <p>{{ message }}</p>
+            </div>
+            {% endif %}
+        </section>
+
+        <section>
+            <h2><i class="fas fa-globe"></i> URL Threat Scanner</h2>
+            <form action="/predict" method="post" id="urlForm">
+                <input type="text" name="url" placeholder="https://example.com" required>
+                <button type="submit" onclick="showLoading('urlSpinner')">
+                    Check URL Safety
+                </button>
+                <div id="urlSpinner" class="spinner"></div>
+            </form>
+
+            {% if predicted_class %}
+            <div class="result-box {{ predicted_class }}">
+                <p><strong>Target:</strong> {{ input_url }}</p>
+                <p><strong>Classification:</strong> {{ predicted_class | upper }}</p>
+            </div>
+            {% endif %}
+        </section>
+    </div>
+
+    <script>
+        function showLoading(id) {
+            document.getElementById(id).style.display = 'block';
+        }
+    </script>
+</body>
+</html>
